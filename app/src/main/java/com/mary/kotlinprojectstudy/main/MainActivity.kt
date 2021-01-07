@@ -1,6 +1,7 @@
 package com.mary.kotlinprojectstudy.main
 
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.Space
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -10,14 +11,16 @@ import com.mary.kotlinprojectstudy.main.adapter.MainColorAdapter
 import com.mary.kotlinprojectstudy.ui.SpanSize
 import com.mary.kotlinprojectstudy.ui.SpannedGridLayoutManager
 import com.mary.kotlinprojectstudy.ui.exception.SpaceItemDecorator
+import com.mary.kotlinprojectstudy.util.DlogUtil
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var mainColorAdapter: MainColorAdapter
 
-    val recyclerView: RecyclerView by lazy { findViewById(R.id.recyclerView) }
+    private lateinit var recyclerView : RecyclerView
+    lateinit var imageViewWrite : ImageView
 
-    private val list: List<MainColor> = listOf(
+    private val list: MutableList<MainColor> = listOf(
         MainColor(1, "Primrose Yellow", 246, 210, 88),
         MainColor(2, "Pale Dogwood", 239, 206, 197),
         MainColor(3, "Hazelnut", 209, 175, 148),
@@ -28,19 +31,33 @@ class MainActivity : AppCompatActivity() {
         MainColor(8, "Niagara", 85, 135, 162),
         MainColor(9, "Kale", 92, 113, 72),
         MainColor(10, "Lapis Blue", 12, 76, 138)
-    )
+    ) as MutableList<MainColor>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+        findView()
+        setListener()
         initRecyclerView()
+    }
+
+    private fun findView() {
+        recyclerView = findViewById(R.id.recyclerView)
+        imageViewWrite = findViewById(R.id.imageViewWrite)
+    }
+
+    private fun setListener() {
+        imageViewWrite.setOnClickListener {
+            DlogUtil.d(TAG, "색 추가 클릭")
+        }
     }
 
     private fun initRecyclerView() {
 
         mainColorAdapter = MainColorAdapter()
-        mainColorAdapter.list = list
+        mainColorAdapter.list = list.shuffled()
 //        val layoutManager = GridLayoutManager(this, 6)
 //        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
 //            override fun getSpanSize(position: Int): Int {

@@ -14,6 +14,7 @@
         android:layout_height="match_parent"/>
 
     <ImageView
+        android:id="@+id/imageViewWrite"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_write_color"
