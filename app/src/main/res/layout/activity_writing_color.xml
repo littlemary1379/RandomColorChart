@@ -26,14 +26,15 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/editTextName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Color Name" />
 
             <EditText
+                android:id="@+id/editTextName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:maxLines="1"/>
 
         </LinearLayout>
 
@@ -71,7 +72,8 @@
                         android:id="@+id/editTextRed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"/>
+                        android:inputType="number"
+                        android:maxLines="1"/>
 
                 </LinearLayout>
 
@@ -92,7 +94,8 @@
                         android:id="@+id/editTextGreen"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"/>
+                        android:inputType="number"
+                        android:maxLines="1"/>
 
                 </LinearLayout>
 
@@ -112,7 +115,8 @@
                         android:id="@+id/editTextBlue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"/>
+                        android:inputType="number"
+                        android:maxLines="1"/>
 
                 </LinearLayout>
 
@@ -141,21 +145,41 @@
             <EditText
                 android:id="@+id/editTextHEX"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxLines="1"/>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="source"/>
+
+            <EditText
+                android:id="@+id/editTextSource"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textViewWrite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:text="Regist"
         android:textAlignment="center"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
         android:layout_marginBottom="20dp"
@@ -163,4 +187,5 @@
         android:layout_marginEnd="15dp"
         android:textColor="@color/white"
         android:background="@color/black_4C4E56"/>
+
 </FrameLayout>

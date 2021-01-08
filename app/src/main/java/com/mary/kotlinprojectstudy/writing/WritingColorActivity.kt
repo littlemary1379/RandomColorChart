@@ -7,9 +7,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mary.kotlinprojectstudy.R
 import com.mary.kotlinprojectstudy.util.DlogUtil
 import org.w3c.dom.Text
+import java.util.*
 
 class WritingColorActivity : AppCompatActivity() {
 
@@ -18,12 +22,29 @@ class WritingColorActivity : AppCompatActivity() {
     lateinit var editTextBlue : EditText
     lateinit var viewPreviewColor : View
 
+    lateinit var editTextName: EditText
+    lateinit var editTextHEX: EditText
+    lateinit var editTextSource: EditText
+
+    lateinit var textViewWrite : TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_writing_color)
 
+        checkBundle()
+
         findView()
         rgbTextWatcher()
+        setListener()
+    }
+
+    private fun checkBundle(){
+        val bundle = intent.getBundleExtra("BUNDLE_KEY")
+        val lastId = bundle?.getInt("lastId")
+        if (lastId != null) {
+            DlogUtil.d(TAG, lastId)
+        }
     }
 
     private fun findView() {
@@ -31,6 +52,13 @@ class WritingColorActivity : AppCompatActivity() {
         editTextGreen = findViewById(R.id.editTextGreen)
         editTextBlue = findViewById(R.id.editTextBlue)
         viewPreviewColor = findViewById(R.id.viewPreviewColor)
+
+        editTextName = findViewById(R.id.editTextName)
+        editTextHEX = findViewById(R.id.editTextHEX)
+        editTextSource = findViewById(R.id.editTextSource)
+
+        textViewWrite = findViewById(R.id.textViewWrite)
+
     }
 
     private fun rgbTextWatcher() {
@@ -137,10 +165,37 @@ class WritingColorActivity : AppCompatActivity() {
         })
     }
 
-    private fun writeColorDB() {
-
-
+    private fun setListener() {
+        textViewWrite.setOnClickListener {
+           writeColorDB()
+        }
     }
+
+    private fun writeColorDB() {
+        DlogUtil.d(TAG, "클릭클릭")
+        val db = Firebase.firestore
+
+        val color = hashMapOf(
+            "id" to 2,
+            "name" to editTextName.text.toString(),
+            "red" to editTextRed.text.toString().toInt(),
+            "green" to editTextGreen.text.toString().toInt(),
+            "blue" to editTextBlue.text.toString().toInt(),
+            "HEX" to editTextHEX.text.toString(),
+            "source" to editTextSource.text.toString()
+        )
+
+        db.collection("colors")
+            .add(color)
+            .addOnSuccessListener { documentReference ->
+                DlogUtil.d(TAG, "add : ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                DlogUtil.d(TAG, e)
+            }
+    }
+
+
 
     companion object {
         private const val TAG = "WritingColorActivity"
