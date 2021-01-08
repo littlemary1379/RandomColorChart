@@ -11,7 +11,9 @@ import com.mary.kotlinprojectstudy.main.adapter.MainColorAdapter
 import com.mary.kotlinprojectstudy.ui.SpanSize
 import com.mary.kotlinprojectstudy.ui.SpannedGridLayoutManager
 import com.mary.kotlinprojectstudy.ui.exception.SpaceItemDecorator
+import com.mary.kotlinprojectstudy.util.ActivityUtil
 import com.mary.kotlinprojectstudy.util.DlogUtil
+import com.mary.kotlinprojectstudy.writing.WritingColorActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,6 +53,8 @@ class MainActivity : AppCompatActivity() {
     private fun setListener() {
         imageViewWrite.setOnClickListener {
             DlogUtil.d(TAG, "색 추가 클릭")
+            ActivityUtil.startActivityWithoutFinish(this, WritingColorActivity::class.java)
+
         }
     }
 
@@ -58,35 +62,6 @@ class MainActivity : AppCompatActivity() {
 
         mainColorAdapter = MainColorAdapter()
         mainColorAdapter.list = list.shuffled()
-//        val layoutManager = GridLayoutManager(this, 6)
-//        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-//            override fun getSpanSize(position: Int): Int {
-//                var gridPosition = position % 5
-//                when (gridPosition) {
-//                    0 -> {
-//                        return 4
-//                    }
-//                    1 -> {
-//                        return 2
-//                    }
-//                    2 -> {
-//                        return 2
-//                    }
-//                    3 -> {
-//                        return 4
-//                    }
-//                    4 -> {
-//                        return 2
-//                    }
-//                    5 -> {
-//                        return 2
-//                    }
-//                }
-//
-//                return 0;
-//            }
-//
-//        }
 
         val layoutManager = SpannedGridLayoutManager(
             orientation = SpannedGridLayoutManager.Orientation.VERTICAL,
