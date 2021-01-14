@@ -11,22 +11,26 @@ import android.widget.TextView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mary.kotlinprojectstudy.R
+import com.mary.kotlinprojectstudy.main.MainActivity
+import com.mary.kotlinprojectstudy.util.ActivityUtil
 import com.mary.kotlinprojectstudy.util.DlogUtil
 import org.w3c.dom.Text
 import java.util.*
 
 class WritingColorActivity : AppCompatActivity() {
 
-    lateinit var editTextRed : EditText
-    lateinit var editTextGreen : EditText
-    lateinit var editTextBlue : EditText
-    lateinit var viewPreviewColor : View
+    lateinit var editTextRed: EditText
+    lateinit var editTextGreen: EditText
+    lateinit var editTextBlue: EditText
+    lateinit var viewPreviewColor: View
 
     lateinit var editTextName: EditText
     lateinit var editTextHEX: EditText
     lateinit var editTextSource: EditText
 
-    lateinit var textViewWrite : TextView
+    lateinit var textViewWrite: TextView
+
+    var lastId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +43,12 @@ class WritingColorActivity : AppCompatActivity() {
         setListener()
     }
 
-    private fun checkBundle(){
+    private fun checkBundle() {
         val bundle = intent.getBundleExtra("BUNDLE_KEY")
         val lastId = bundle?.getInt("lastId")
         if (lastId != null) {
             DlogUtil.d(TAG, lastId)
+            this.lastId = lastId
         }
     }
 
@@ -62,103 +67,99 @@ class WritingColorActivity : AppCompatActivity() {
     }
 
     private fun rgbTextWatcher() {
-        editTextRed.addTextChangedListener(object : TextWatcher{
+        editTextRed.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
 
-                if(editTextRed.text.toString() == "") {
-                    DlogUtil.d(TAG, "값 지웠음")
+                if (editTextRed.text.toString() == "") {
                     viewPreviewColor.setBackgroundResource(R.drawable.test_border)
                     return
                 }
 
-                val red : Int = Integer.parseInt(editTextRed.text.toString())
-                if(red > 255) {
-                    editTextRed.setText(editTextRed.text.substring(0, editTextRed.length()-1))
+                val red: Int = Integer.parseInt(editTextRed.text.toString())
+                if (red > 255) {
+                    editTextRed.setText(editTextRed.text.substring(0, editTextRed.length() - 1))
                     editTextRed.setSelection(editTextRed.length())
                 }
 
-                if(editTextBlue.text.toString() == "" || editTextGreen.text.toString() == "") {
-                    DlogUtil.d(TAG, "값이 비었음")
+                if (editTextBlue.text.toString() == "" || editTextGreen.text.toString() == "") {
                     return
                 }
 
-                val green : Int = Integer.parseInt(editTextGreen.text.toString())
-                val blue : Int = Integer.parseInt(editTextBlue.text.toString())
+                val green: Int = Integer.parseInt(editTextGreen.text.toString())
+                val blue: Int = Integer.parseInt(editTextBlue.text.toString())
 
-                DlogUtil.d(TAG, "색 변경")
                 viewPreviewColor.setBackgroundColor(Color.rgb(red, green, blue))
 
             }
 
         })
 
-        editTextGreen.addTextChangedListener(object  : TextWatcher {
+        editTextGreen.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
 
-                if(editTextGreen.text.toString() == "") {
-                    DlogUtil.d(TAG, "값 지웠음")
+                if (editTextGreen.text.toString() == "") {
                     viewPreviewColor.setBackgroundResource(R.drawable.test_border)
                     return
                 }
 
-                val green : Int = Integer.parseInt(editTextGreen.text.toString())
-                if(green > 255) {
-                    editTextGreen.setText(editTextGreen.text.substring(0, editTextGreen.length()-1))
+                val green: Int = Integer.parseInt(editTextGreen.text.toString())
+                if (green > 255) {
+                    editTextGreen.setText(
+                        editTextGreen.text.substring(
+                            0,
+                            editTextGreen.length() - 1
+                        )
+                    )
                     editTextGreen.setSelection(editTextGreen.length())
                 }
 
 
-                if(editTextRed.text.toString() == "" || editTextBlue.text.toString() == "") {
-                    DlogUtil.d(TAG, "값이 비었음")
+                if (editTextRed.text.toString() == "" || editTextBlue.text.toString() == "") {
                     return
                 }
 
-                val red : Int = Integer.parseInt(editTextRed.text.toString())
+                val red: Int = Integer.parseInt(editTextRed.text.toString())
 
-                val blue : Int = Integer.parseInt(editTextBlue.text.toString())
+                val blue: Int = Integer.parseInt(editTextBlue.text.toString())
 
-                DlogUtil.d(TAG, "색 변경")
                 viewPreviewColor.setBackgroundColor(Color.rgb(red, green, blue))
             }
 
         })
 
-        editTextBlue.addTextChangedListener( object : TextWatcher {
+        editTextBlue.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
 
-                if(editTextBlue.text.toString() == "") {
-                    DlogUtil.d(TAG, "값 지웠음")
+                if (editTextBlue.text.toString() == "") {
                     viewPreviewColor.setBackgroundResource(R.drawable.test_border)
                     return
                 }
 
-                val blue : Int = Integer.parseInt(editTextBlue.text.toString())
-                if(blue > 255) {
-                    editTextBlue.setText(editTextBlue.text.substring(0, editTextBlue.length()-1))
+                val blue: Int = Integer.parseInt(editTextBlue.text.toString())
+                if (blue > 255) {
+                    editTextBlue.setText(editTextBlue.text.substring(0, editTextBlue.length() - 1))
                     editTextBlue.setSelection(editTextBlue.length())
                 }
 
-                if(editTextRed.text.toString() == "" || editTextGreen.text.toString() == "") {
-                    DlogUtil.d(TAG, "값이 비었음")
+                if (editTextRed.text.toString() == "" || editTextGreen.text.toString() == "") {
                     return
                 }
 
-                val red : Int = Integer.parseInt(editTextRed.text.toString())
-                val green : Int = Integer.parseInt(editTextGreen.text.toString())
+                val red: Int = Integer.parseInt(editTextRed.text.toString())
+                val green: Int = Integer.parseInt(editTextGreen.text.toString())
 
-                DlogUtil.d(TAG, "색 변경")
                 viewPreviewColor.setBackgroundColor(Color.rgb(red, green, blue))
             }
 
@@ -167,7 +168,7 @@ class WritingColorActivity : AppCompatActivity() {
 
     private fun setListener() {
         textViewWrite.setOnClickListener {
-           writeColorDB()
+            writeColorDB()
         }
     }
 
@@ -176,12 +177,12 @@ class WritingColorActivity : AppCompatActivity() {
         val db = Firebase.firestore
 
         val color = hashMapOf(
-            "id" to 2,
+            "id" to lastId + 1,
             "name" to editTextName.text.toString(),
             "red" to editTextRed.text.toString().toInt(),
             "green" to editTextGreen.text.toString().toInt(),
             "blue" to editTextBlue.text.toString().toInt(),
-            "HEX" to editTextHEX.text.toString(),
+            "HEX" to editTextHEX.text.toString().toUpperCase(Locale.ROOT),
             "source" to editTextSource.text.toString()
         )
 
@@ -189,12 +190,13 @@ class WritingColorActivity : AppCompatActivity() {
             .add(color)
             .addOnSuccessListener { documentReference ->
                 DlogUtil.d(TAG, "add : ${documentReference.id}")
+                lastId += 1
+                ActivityUtil.startActivityWithFinish(this, MainActivity::class.java)
             }
             .addOnFailureListener { e ->
                 DlogUtil.d(TAG, e)
             }
     }
-
 
 
     companion object {

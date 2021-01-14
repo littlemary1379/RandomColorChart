@@ -34,7 +34,8 @@
                 android:id="@+id/editTextName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:inputType="textCapSentences"/>
 
         </LinearLayout>
 
@@ -73,7 +74,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:nextFocusDown="@id/editTextGreen"/>
 
                 </LinearLayout>
 
@@ -95,7 +97,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:nextFocusDown="@id/editTextBlue"/>
 
                 </LinearLayout>
 
@@ -116,7 +119,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:nextFocusDown="@id/editTextHEX"/>
 
                 </LinearLayout>
 
@@ -146,7 +150,9 @@
                 android:id="@+id/editTextHEX"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:inputType="textCapSentences"
+                android:textAllCaps="true"/>
 
         </LinearLayout>
 
@@ -159,7 +165,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="source"/>
+                android:text="Source"/>
 
             <EditText
                 android:id="@+id/editTextSource"

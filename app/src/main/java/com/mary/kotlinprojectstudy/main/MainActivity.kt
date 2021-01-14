@@ -22,24 +22,11 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var mainColorAdapter: MainColorAdapter
 
-    private lateinit var recyclerView : RecyclerView
-    lateinit var imageViewWrite : ImageView
+    private lateinit var recyclerView: RecyclerView
+    lateinit var imageViewWrite: ImageView
 
     private val db = Firebase.firestore
-    var lastId : Int = 0
-
-    private val list: MutableList<MainColor> = listOf(
-        MainColor(1, "Primrose Yellow", 246, 210, 88,"11","22"),
-        MainColor(2, "Pale Dogwood", 239, 206, 197,"11","22"),
-        MainColor(3, "Hazelnut", 209, 175, 148,"11","22"),
-        MainColor(4, "Island Paradise", 151, 213, 224,"11","22"),
-        MainColor(5, "Greenery", 136, 177, 75,"11","22"),
-        MainColor(6, "Flame", 239, 86, 45,"11","22"),
-        MainColor(7, "Pink Yarrow", 209, 48, 118,"11","22"),
-        MainColor(8, "Niagara", 85, 135, 162,"11","22"),
-        MainColor(9, "Kale", 92, 113, 72,"11","22"),
-        MainColor(10, "Lapis Blue", 12, 76, 138,"11","22")
-    ) as MutableList<MainColor>
+    var lastId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +57,13 @@ class MainActivity : AppCompatActivity() {
     private fun initRecyclerView() {
 
         mainColorAdapter = MainColorAdapter()
-        mainColorAdapter.list = list.shuffled()
+
+        mainColorAdapter.mainColorAdapterDelegate = object : MainColorAdapter.MainColorAdapterDelegate {
+            override fun loadMore() {
+                loadMoreColor()
+            }
+
+        }
 
         val layoutManager = SpannedGridLayoutManager(
             orientation = SpannedGridLayoutManager.Orientation.VERTICAL,
@@ -82,11 +75,12 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = mainColorAdapter
 
+
         layoutManager.spanSizeLookup = SpannedGridLayoutManager.SpanSizeLookup { position ->
 
             when (position % 9) {
 
-                0 ,6 -> {
+                0, 6 -> {
                     SpanSize(4, 4)
                 }
 
@@ -112,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun loadId(){
+    private fun loadId() {
         db.collection("colors").orderBy("id", Query.Direction.DESCENDING).limit(1)
             .get()
             .addOnSuccessListener { documents ->
@@ -121,6 +115,8 @@ class MainActivity : AppCompatActivity() {
                     val lastColor = document.toObject(MainColor::class.java)
                     DlogUtil.d(TAG, lastColor.id)
                     lastId = lastColor.id.toInt()
+
+                    loadColor()
 
                 }
             }.addOnFailureListener { e ->
@@ -132,5 +128,35 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "MainActivity"
     }
 
+    private fun loadColor() {
 
+        var list : MutableList<MainColor> = mutableListOf()
+
+        db.collection("colors").orderBy("id").limit(9).get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    DlogUtil.d(TAG, "${document.id} => ${document.data}")
+                    list.add(document.toObject(MainColor::class.java))
+                }
+
+                mainColorAdapter.reloadItem(list.shuffled())
+            }
+    }
+
+    private fun loadMoreColor() {
+
+        DlogUtil.d(TAG, "???????")
+
+        var list : MutableList<MainColor> = mutableListOf()
+
+        db.collection("colors").orderBy("id").whereGreaterThan("id",mainColorAdapter.itemCount).limit(9).get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    DlogUtil.d(TAG, "${document.id} => ${document.data}")
+                    list.add(document.toObject(MainColor::class.java))
+                }
+
+                mainColorAdapter.loadMoreList(list.shuffled())
+            }
+    }
 }

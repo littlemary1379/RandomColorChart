@@ -6,11 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mary.kotlinprojectstudy.R
 import com.mary.kotlinprojectstudy.bean.MainColor
+import com.mary.kotlinprojectstudy.main.MainActivity
 import com.mary.kotlinprojectstudy.main.adapter.item.MainColorViewHolder
+import com.mary.kotlinprojectstudy.util.DlogUtil
 
 class MainColorAdapter : RecyclerView.Adapter<MainColorViewHolder>() {
 
-    var list : List<MainColor> = listOf()
+    interface MainColorAdapterDelegate {
+        fun loadMore()
+    }
+
+    var list : MutableList<MainColor> = mutableListOf()
+    lateinit var mainColorAdapterDelegate : MainColorAdapterDelegate
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainColorViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_color_chart, parent, false)
@@ -20,36 +27,30 @@ class MainColorAdapter : RecyclerView.Adapter<MainColorViewHolder>() {
     override fun onBindViewHolder(holder: MainColorViewHolder, position: Int) {
         val item = list[position]
 
-//        var width = 1
-//        var height = 1
-//
-//        if(position == 0) {
-//            width = 2
-//            height = 2
-//        }
-//
-//
-//
-//        holder.itemView.layoutParams = SpanLayoutParams(SpanSize(width, height))
-
         holder.apply {
             updateView(item)
         }
 
+        if(position >= itemCount -1 ) {
+            DlogUtil.d(TAG, "???????")
+            mainColorAdapterDelegate.loadMore()
+        }
     }
-
-//    override fun onViewAttachedToWindow(holder: MainColorViewHolder) {
-//        super.onViewAttachedToWindow(holder)
-//        var layoutParam : ViewGroup.LayoutParams = holder.itemView.layoutParams
-//        if(layoutParam != null && layoutParam is StaggeredGridLayoutManager.LayoutParams && holder.layoutPosition == 0) {
-//            var gridLayoutParam : StaggeredGridLayoutManager.LayoutParams = layoutParam
-//        }
-//        holder.setIsRecyclable(false)
-//    }
 
     override fun getItemCount(): Int {
         Log.d(TAG, "getItemCount: " + list.size)
         return list.size
+    }
+
+    fun reloadItem(mainColors : List<MainColor>){
+        list.clear()
+        list.addAll(mainColors)
+        notifyDataSetChanged()
+    }
+
+    fun loadMoreList(mainColors: List<MainColor>) {
+        list.addAll(mainColors)
+        notifyItemRangeChanged(itemCount, mainColors.size)
     }
 
     companion object {
