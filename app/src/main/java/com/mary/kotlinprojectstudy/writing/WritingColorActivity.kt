@@ -8,13 +8,14 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mary.kotlinprojectstudy.R
 import com.mary.kotlinprojectstudy.main.MainActivity
 import com.mary.kotlinprojectstudy.util.ActivityUtil
 import com.mary.kotlinprojectstudy.util.DlogUtil
-import org.w3c.dom.Text
+import java.lang.StringBuilder
 import java.util.*
 
 class WritingColorActivity : AppCompatActivity() {
@@ -22,10 +23,11 @@ class WritingColorActivity : AppCompatActivity() {
     lateinit var editTextRed: EditText
     lateinit var editTextGreen: EditText
     lateinit var editTextBlue: EditText
-    lateinit var viewPreviewColor: View
+    lateinit var viewPreviewColorRgb: View
 
     lateinit var editTextName: EditText
     lateinit var editTextHEX: EditText
+    lateinit var viewPreviewColorHex : View
     lateinit var editTextSource: EditText
 
     lateinit var textViewWrite: TextView
@@ -40,6 +42,7 @@ class WritingColorActivity : AppCompatActivity() {
 
         findView()
         rgbTextWatcher()
+        hexTextWatcher()
         setListener()
     }
 
@@ -56,10 +59,11 @@ class WritingColorActivity : AppCompatActivity() {
         editTextRed = findViewById(R.id.editTextRed)
         editTextGreen = findViewById(R.id.editTextGreen)
         editTextBlue = findViewById(R.id.editTextBlue)
-        viewPreviewColor = findViewById(R.id.viewPreviewColor)
+        viewPreviewColorRgb = findViewById(R.id.viewPreviewColorRgb)
 
         editTextName = findViewById(R.id.editTextName)
         editTextHEX = findViewById(R.id.editTextHEX)
+        viewPreviewColorHex = findViewById(R.id.viewPreviewColorHex)
         editTextSource = findViewById(R.id.editTextSource)
 
         textViewWrite = findViewById(R.id.textViewWrite)
@@ -75,7 +79,7 @@ class WritingColorActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
 
                 if (editTextRed.text.toString() == "") {
-                    viewPreviewColor.setBackgroundResource(R.drawable.test_border)
+                    viewPreviewColorRgb.setBackgroundResource(R.drawable.test_border)
                     return
                 }
 
@@ -92,7 +96,7 @@ class WritingColorActivity : AppCompatActivity() {
                 val green: Int = Integer.parseInt(editTextGreen.text.toString())
                 val blue: Int = Integer.parseInt(editTextBlue.text.toString())
 
-                viewPreviewColor.setBackgroundColor(Color.rgb(red, green, blue))
+                viewPreviewColorRgb.setBackgroundColor(Color.rgb(red, green, blue))
 
             }
 
@@ -106,7 +110,7 @@ class WritingColorActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
 
                 if (editTextGreen.text.toString() == "") {
-                    viewPreviewColor.setBackgroundResource(R.drawable.test_border)
+                    viewPreviewColorRgb.setBackgroundResource(R.drawable.test_border)
                     return
                 }
 
@@ -130,7 +134,7 @@ class WritingColorActivity : AppCompatActivity() {
 
                 val blue: Int = Integer.parseInt(editTextBlue.text.toString())
 
-                viewPreviewColor.setBackgroundColor(Color.rgb(red, green, blue))
+                viewPreviewColorRgb.setBackgroundColor(Color.rgb(red, green, blue))
             }
 
         })
@@ -143,7 +147,7 @@ class WritingColorActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
 
                 if (editTextBlue.text.toString() == "") {
-                    viewPreviewColor.setBackgroundResource(R.drawable.test_border)
+                    viewPreviewColorRgb.setBackgroundResource(R.drawable.test_border)
                     return
                 }
 
@@ -160,7 +164,65 @@ class WritingColorActivity : AppCompatActivity() {
                 val red: Int = Integer.parseInt(editTextRed.text.toString())
                 val green: Int = Integer.parseInt(editTextGreen.text.toString())
 
-                viewPreviewColor.setBackgroundColor(Color.rgb(red, green, blue))
+                viewPreviewColorRgb.setBackgroundColor(Color.rgb(red, green, blue))
+            }
+
+        })
+    }
+
+    private fun hexTextWatcher() {
+        editTextHEX.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (editTextHEX.text.toString().length<6) {
+                    viewPreviewColorHex.setBackgroundResource(R.drawable.test_border)
+                    return
+                }
+
+                if (editTextHEX.text.toString().length>6) {
+                    editTextHEX.setText(editTextHEX.text.substring(0, editTextHEX.length() - 1))
+                    editTextHEX.setSelection(editTextHEX.length())
+                    return
+                }
+
+                val hex : String = editTextHEX.text.toString().trim()
+                DlogUtil.d(TAG, hex)
+
+                if(hex.contains("#")) {
+                    editTextHEX.setText(editTextHEX.text.substring(1, editTextHEX.length()))
+                    editTextHEX.setSelection(editTextHEX.length())
+                    return
+                }
+
+                var charString : MutableList<String> = mutableListOf()
+                charString.clear()
+                charString.addAll(hex.split(""))
+
+                val sb = StringBuilder()
+                for (i : Int in charString.indices) {
+                    if(i == 0 || i== 7) {
+                        continue
+                    } else {
+                        if(charString[i] in "0".."9" || charString[i] in "a".."f" || charString[i] in "A".."F") {
+                            sb.append(charString[i])
+                        } else {
+                            DlogUtil.d(TAG, "16진수 이상 값 입력")
+                            Toast.makeText(this@WritingColorActivity, "16진수 범위 안의 값을 사용할 수 없습니다.", Toast.LENGTH_SHORT)
+                            return
+                        }
+
+                    }
+                }
+
+                val finalHex : String = "#$sb"
+                DlogUtil.d(TAG, finalHex)
+
+                viewPreviewColorHex.setBackgroundColor(Color.parseColor(finalHex))
             }
 
         })

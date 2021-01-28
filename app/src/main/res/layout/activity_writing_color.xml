@@ -9,16 +9,16 @@
     <FrameLayout
         android:id="@+id/frameLayoutNavigation"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="50dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="30dp"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp">
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,8 +34,8 @@
                 android:id="@+id/editTextName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:inputType="textCapSentences"/>
+                android:inputType="textCapSentences"
+                android:maxLines="1" />
 
         </LinearLayout>
 
@@ -61,13 +61,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="3dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="3dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Red"/>
+                        android:text="Red" />
 
                     <EditText
                         android:id="@+id/editTextRed"
@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="number"
                         android:maxLines="1"
-                        android:nextFocusDown="@id/editTextGreen"/>
+                        android:nextFocusDown="@id/editTextGreen" />
 
                 </LinearLayout>
 
@@ -83,14 +83,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="3dp"
+                    android:orientation="vertical"
 
-                    android:orientation="vertical">
+                    android:padding="3dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Green"/>
+                        android:text="Green" />
 
                     <EditText
                         android:id="@+id/editTextGreen"
@@ -98,7 +98,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="number"
                         android:maxLines="1"
-                        android:nextFocusDown="@id/editTextBlue"/>
+                        android:nextFocusDown="@id/editTextBlue" />
 
                 </LinearLayout>
 
@@ -106,13 +106,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="3dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="3dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Blue"/>
+                        android:text="Blue" />
 
                     <EditText
                         android:id="@+id/editTextBlue"
@@ -120,18 +120,18 @@
                         android:layout_height="wrap_content"
                         android:inputType="number"
                         android:maxLines="1"
-                        android:nextFocusDown="@id/editTextHEX"/>
+                        android:nextFocusDown="@id/editTextHEX" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <View
-                android:id="@+id/viewPreviewColor"
+                android:id="@+id/viewPreviewColorRgb"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:background="@drawable/test_border"
-                android:layout_margin="6dp"/>
+                android:layout_margin="6dp"
+                android:background="@drawable/test_border" />
 
         </LinearLayout>
 
@@ -141,18 +141,32 @@
             android:layout_marginTop="20dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="HEX/HTML"/>
-
-            <EditText
-                android:id="@+id/editTextHEX"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:inputType="textCapSentences"
-                android:textAllCaps="true"/>
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="HEX/HTML" />
+
+                <EditText
+                    android:id="@+id/editTextHEX"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences"
+                    android:maxLines="1"
+                    android:textAllCaps="true" />
+
+                <View
+                    android:id="@+id/viewPreviewColorHex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/test_border" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -165,13 +179,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Source"/>
+                android:text="Source" />
 
             <EditText
                 android:id="@+id/editTextSource"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"/>
+                android:maxLines="1" />
 
         </LinearLayout>
 
@@ -182,16 +196,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:text="Regist"
-        android:textAlignment="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        android:layout_marginBottom="20dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:textColor="@color/white"
-        android:background="@color/black_4C4E56"/>
+        android:layout_marginBottom="20dp"
+        android:background="@color/black_4C4E56"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="10dp"
+        android:text="Regist"
+        android:textAlignment="center"
+        android:textColor="@color/white" />
 
 </FrameLayout>

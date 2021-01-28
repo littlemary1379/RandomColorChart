@@ -2,7 +2,6 @@ package com.mary.kotlinprojectstudy.main
 
 import android.os.Bundle
 import android.widget.ImageView
-import android.widget.Space
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.Query
@@ -16,6 +15,7 @@ import com.mary.kotlinprojectstudy.ui.SpannedGridLayoutManager
 import com.mary.kotlinprojectstudy.ui.exception.SpaceItemDecorator
 import com.mary.kotlinprojectstudy.util.ActivityUtil
 import com.mary.kotlinprojectstudy.util.DlogUtil
+import com.mary.kotlinprojectstudy.util.EventUtil
 import com.mary.kotlinprojectstudy.writing.WritingColorActivity
 
 class MainActivity : AppCompatActivity() {
@@ -33,11 +33,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
+        initEvent()
         findView()
         setListener()
         initRecyclerView()
         loadId()
     }
+
+    private fun initEvent() {
+        EventUtil.addEventObserver("sendColor", this, object : EventUtil.EventRunnable {
+            override fun run(arrow: String, poster: Any, data: HashMap<String, Any>?) {
+                DlogUtil.d(TAG, "옵저버 됐나??????")
+                if(!data.isNullOrEmpty()) {
+                    DlogUtil.d(TAG, "헉미친 안빔")
+                    var id: Long = data["id"].toString().toLong()
+                } else {
+                    DlogUtil.d(TAG, "비었니.......?")
+                }
+            }
+        })
+0    }
 
     private fun findView() {
         recyclerView = findViewById(R.id.recyclerView)
@@ -132,7 +147,7 @@ class MainActivity : AppCompatActivity() {
 
         var list : MutableList<MainColor> = mutableListOf()
 
-        db.collection("colors").orderBy("id").limit(9).get()
+        db.collection("colors").orderBy("id").limit(18).get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     DlogUtil.d(TAG, "${document.id} => ${document.data}")
@@ -149,7 +164,7 @@ class MainActivity : AppCompatActivity() {
 
         var list : MutableList<MainColor> = mutableListOf()
 
-        db.collection("colors").orderBy("id").whereGreaterThan("id",mainColorAdapter.itemCount).limit(9).get()
+        db.collection("colors").orderBy("id").whereGreaterThan("id",mainColorAdapter.itemCount).limit(18).get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     DlogUtil.d(TAG, "${document.id} => ${document.data}")
