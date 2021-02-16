@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mary.kotlinprojectstudy.R
 import com.mary.kotlinprojectstudy.bean.MainColor
 import com.mary.kotlinprojectstudy.main.adapter.MainColorAdapter
+import com.mary.kotlinprojectstudy.showdetail.ColorDetailActivity
 import com.mary.kotlinprojectstudy.ui.SpanSize
 import com.mary.kotlinprojectstudy.ui.SpannedGridLayoutManager
 import com.mary.kotlinprojectstudy.ui.exception.SpaceItemDecorator
@@ -24,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     lateinit var imageViewWrite: ImageView
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private val db = Firebase.firestore
     var lastId: Int = 0
@@ -44,19 +47,27 @@ class MainActivity : AppCompatActivity() {
         EventUtil.addEventObserver("sendColor", this, object : EventUtil.EventRunnable {
             override fun run(arrow: String, poster: Any, data: HashMap<String, Any>?) {
                 DlogUtil.d(TAG, "옵저버 됐나??????")
-                if(!data.isNullOrEmpty()) {
+                if (!data.isNullOrEmpty()) {
                     DlogUtil.d(TAG, "헉미친 안빔")
                     var id: Long = data["id"].toString().toLong()
+                    var bundle = Bundle()
+                    bundle.putLong("id", id)
+                    ActivityUtil.startActivityWithoutFinish(
+                        this@MainActivity,
+                        ColorDetailActivity::class.java,
+                        bundle
+                    )
                 } else {
                     DlogUtil.d(TAG, "비었니.......?")
                 }
             }
         })
-0    }
+    }
 
     private fun findView() {
         recyclerView = findViewById(R.id.recyclerView)
         imageViewWrite = findViewById(R.id.imageViewWrite)
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
     }
 
     private fun setListener() {
@@ -65,7 +76,11 @@ class MainActivity : AppCompatActivity() {
             var bundle = Bundle()
             bundle.putInt("lastId", lastId)
             ActivityUtil.startActivityWithoutFinish(this, WritingColorActivity::class.java, bundle)
+        }
 
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing=false
+            loadColor()
         }
     }
 
@@ -73,12 +88,13 @@ class MainActivity : AppCompatActivity() {
 
         mainColorAdapter = MainColorAdapter()
 
-        mainColorAdapter.mainColorAdapterDelegate = object : MainColorAdapter.MainColorAdapterDelegate {
-            override fun loadMore() {
-                loadMoreColor()
-            }
+        mainColorAdapter.mainColorAdapterDelegate =
+            object : MainColorAdapter.MainColorAdapterDelegate {
+                override fun loadMore() {
+                    loadMoreColor()
+                }
 
-        }
+            }
 
         val layoutManager = SpannedGridLayoutManager(
             orientation = SpannedGridLayoutManager.Orientation.VERTICAL,
@@ -145,7 +161,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadColor() {
 
-        var list : MutableList<MainColor> = mutableListOf()
+        var list: MutableList<MainColor> = mutableListOf()
 
         db.collection("colors").orderBy("id").limit(18).get()
             .addOnSuccessListener { result ->
@@ -162,9 +178,10 @@ class MainActivity : AppCompatActivity() {
 
         DlogUtil.d(TAG, "???????")
 
-        var list : MutableList<MainColor> = mutableListOf()
+        var list: MutableList<MainColor> = mutableListOf()
 
-        db.collection("colors").orderBy("id").whereGreaterThan("id",mainColorAdapter.itemCount).limit(18).get()
+        db.collection("colors").orderBy("id").whereGreaterThan("id", mainColorAdapter.itemCount)
+            .limit(18).get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     DlogUtil.d(TAG, "${document.id} => ${document.data}")

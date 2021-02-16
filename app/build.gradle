@@ -47,6 +47,16 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    //Color Picker
+    implementation 'com.larswerkman:HoloColorPicker:1.5'
+
+    //Google
     implementation platform('com.google.firebase:firebase-bom:26.2.0')
     implementation 'com.google.firebase:firebase-firestore-ktx:21.4.3'
+
+    //SwipeRefreshLayout
+    dependencies {
+        implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    }
+
 }

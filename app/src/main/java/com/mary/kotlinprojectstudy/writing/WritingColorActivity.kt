@@ -7,12 +7,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mary.kotlinprojectstudy.R
 import com.mary.kotlinprojectstudy.main.MainActivity
+import com.mary.kotlinprojectstudy.ui.NavigationViewHolder
 import com.mary.kotlinprojectstudy.util.ActivityUtil
 import com.mary.kotlinprojectstudy.util.DlogUtil
 import java.lang.StringBuilder
@@ -32,6 +34,9 @@ class WritingColorActivity : AppCompatActivity() {
 
     lateinit var textViewWrite: TextView
 
+    lateinit var frameLayoutNavigation: FrameLayout
+    lateinit var navigationViewHolder: NavigationViewHolder
+
     var lastId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +46,7 @@ class WritingColorActivity : AppCompatActivity() {
         checkBundle()
 
         findView()
+        initNavigation()
         rgbTextWatcher()
         hexTextWatcher()
         setListener()
@@ -68,6 +74,13 @@ class WritingColorActivity : AppCompatActivity() {
 
         textViewWrite = findViewById(R.id.textViewWrite)
 
+        frameLayoutNavigation = findViewById(R.id.frameLayoutNavigation)
+
+    }
+
+    private fun initNavigation() {
+        navigationViewHolder = NavigationViewHolder(this)
+        frameLayoutNavigation.addView(navigationViewHolder.view)
     }
 
     private fun rgbTextWatcher() {

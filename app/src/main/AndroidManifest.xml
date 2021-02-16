@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KotlinProjectStudy">
-        <activity android:name=".writing.WritingColorActivity"></activity>
+        <activity android:name=".showdetail.ColorDetailActivity"></activity>
+        <activity android:name=".writing.WritingColorActivity" />
         <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait">
