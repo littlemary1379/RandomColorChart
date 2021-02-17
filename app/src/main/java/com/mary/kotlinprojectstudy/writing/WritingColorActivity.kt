@@ -99,7 +99,7 @@ class WritingColorActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
 
                 if (editTextRed.text.toString() == "") {
-                    viewPreviewColorRgb.setBackgroundResource(R.drawable.test_border)
+                    viewPreviewColorRgb.setBackgroundResource(R.drawable.color_border)
                     return
                 }
 
@@ -130,7 +130,7 @@ class WritingColorActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
 
                 if (editTextGreen.text.toString() == "") {
-                    viewPreviewColorRgb.setBackgroundResource(R.drawable.test_border)
+                    viewPreviewColorRgb.setBackgroundResource(R.drawable.color_border)
                     return
                 }
 
@@ -167,7 +167,7 @@ class WritingColorActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
 
                 if (editTextBlue.text.toString() == "") {
-                    viewPreviewColorRgb.setBackgroundResource(R.drawable.test_border)
+                    viewPreviewColorRgb.setBackgroundResource(R.drawable.color_border)
                     return
                 }
 
@@ -200,7 +200,7 @@ class WritingColorActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (editTextHEX.text.toString().length<6) {
-                    viewPreviewColorHex.setBackgroundResource(R.drawable.test_border)
+                    viewPreviewColorHex.setBackgroundResource(R.drawable.color_border)
                     return
                 }
 

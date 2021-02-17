@@ -131,7 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_margin="6dp"
-                android:background="@drawable/test_border" />
+                android:background="@drawable/color_border" />
 
         </LinearLayout>
 
@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_margin="6dp"
-                    android:background="@drawable/test_border" />
+                    android:background="@drawable/color_border" />
 
             </LinearLayout>
 
