@@ -80,6 +80,13 @@ class WritingColorActivity : AppCompatActivity() {
 
     private fun initNavigation() {
         navigationViewHolder = NavigationViewHolder(this)
+        navigationViewHolder.navigationViewHolderDelegate = object : NavigationViewHolder.NavigationViewHolderDelegate {
+            override fun back() {
+                onBackPressed()
+            }
+        }
+
+        navigationViewHolder.setTitle("Writing Color")
         frameLayoutNavigation.addView(navigationViewHolder.view)
     }
 

@@ -8,6 +8,11 @@
     tools:context=".showdetail.ColorDetailActivity"
     android:orientation="vertical">
 
+    <FrameLayout
+        android:id="@+id/frameLayoutNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

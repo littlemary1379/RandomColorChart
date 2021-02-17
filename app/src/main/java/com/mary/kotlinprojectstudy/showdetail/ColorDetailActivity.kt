@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.icu.number.IntegerWidth
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.FrameLayout
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.larswerkman.holocolorpicker.*
@@ -19,6 +20,9 @@ class ColorDetailActivity : AppCompatActivity() {
         private const val TAG = "ColorDetailActivity"
     }
 
+    lateinit var frameLayoutNavigation: FrameLayout
+    lateinit var navigationViewHolder: NavigationViewHolder
+
     private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +30,8 @@ class ColorDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_color_detail)
 
         checkBundle()
+        findView()
+        initNavigation()
 
     }
 
@@ -37,7 +43,21 @@ class ColorDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun findView() {
+        frameLayoutNavigation = findViewById(R.id.frameLayoutNavigation)
+    }
 
+    private fun initNavigation() {
+        navigationViewHolder = NavigationViewHolder(this)
+        navigationViewHolder.navigationViewHolderDelegate = object : NavigationViewHolder.NavigationViewHolderDelegate {
+            override fun back() {
+                onBackPressed()
+            }
+        }
+
+        navigationViewHolder.setTitle("Pick Color")
+        frameLayoutNavigation.addView(navigationViewHolder.view)
+    }
 
     private fun loadColorById(id: Long) {
         db.collection("colors").whereEqualTo("id", id).get()
