@@ -1,11 +1,16 @@
 package com.mary.kotlinprojectstudy.showdetail
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Color
 import android.icu.number.IntegerWidth
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.larswerkman.holocolorpicker.*
@@ -28,11 +33,14 @@ class ColorDetailActivity : AppCompatActivity() {
     private lateinit var textViewRed: TextView
     private lateinit var textViewGreen: TextView
     private lateinit var textViewBlue: TextView
+    private lateinit var textViewColorCopy : TextView
 
     private lateinit var textViewNewHEX: TextView
     private lateinit var textViewNewRed: TextView
     private lateinit var textViewNewGreen: TextView
     private lateinit var textViewNewBlue: TextView
+    private lateinit var textViewNewColorCopy : TextView
+
 
     private lateinit var frameLayoutNavigation: FrameLayout
     private lateinit var navigationViewHolder: NavigationViewHolder
@@ -48,7 +56,7 @@ class ColorDetailActivity : AppCompatActivity() {
         checkBundle()
         findView()
         initNavigation()
-
+        setListener()
     }
 
     private fun checkBundle() {
@@ -67,11 +75,13 @@ class ColorDetailActivity : AppCompatActivity() {
         textViewRed = findViewById(R.id.textViewRed)
         textViewGreen = findViewById(R.id.textViewGreen)
         textViewBlue = findViewById(R.id.textViewBlue)
+        textViewColorCopy = findViewById(R.id.textViewColorCopy)
 
         textViewNewHEX = findViewById(R.id.textViewNewHEX)
         textViewNewRed = findViewById(R.id.textViewNewRed)
         textViewNewGreen = findViewById(R.id.textViewNewGreen)
         textViewNewBlue = findViewById(R.id.textViewNewBlue)
+        textViewNewColorCopy = findViewById(R.id.textViewNewColorCopy)
     }
 
     private fun initNavigation() {
@@ -120,6 +130,43 @@ class ColorDetailActivity : AppCompatActivity() {
         textViewNewGreen.text = "Green : $green"
         textViewNewBlue.text = "Blue : $blue"
 
+    }
+
+    private fun setListener(){
+        textViewColorCopy.setOnClickListener {
+            var clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val hex = textViewHEX.text.split(":")
+            val clip : ClipData = ClipData.newPlainText("pick color", hex[1].trim())
+            clipboardManager.setPrimaryClip(clip)
+
+            //Toast.makeText(this, "Copy ${hex[1].trim()}", Toast.LENGTH_LONG).show()
+            var layoutInflater = LayoutInflater.from(this).inflate(R.layout.view_holder_toast,null)
+            var text : TextView = layoutInflater.findViewById(R.id.textViewToast)
+            text.text="Copy ${hex[1].trim()}"
+
+            var toast = Toast(this)
+            toast.view = layoutInflater
+            toast.show()
+
+
+
+        }
+
+        textViewNewColorCopy.setOnClickListener {
+            var clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val hex = textViewNewHEX.text.split(":")
+            val clip : ClipData = ClipData.newPlainText("pick color", hex[1].trim())
+            clipboardManager.setPrimaryClip(clip)
+            //Toast.makeText(this, "Copy ${hex[1].trim()}", Toast.LENGTH_LONG).show()
+
+            var layoutInflater = LayoutInflater.from(this).inflate(R.layout.view_holder_toast,null)
+            var text : TextView = layoutInflater.findViewById(R.id.textViewToast)
+            text.text="Copy ${hex[1].trim()}"
+
+            var toast = Toast(this)
+            toast.view = layoutInflater
+            toast.show()
+        }
     }
 
     private fun initPicker(red: Int, green: Int, blue: Int) {

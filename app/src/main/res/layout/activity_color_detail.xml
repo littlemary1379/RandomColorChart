@@ -27,13 +27,35 @@
             android:text="Color Name : "
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textViewHEX"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="HEX : "
-            android:textSize="16sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewHEX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HEX : "
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewColorCopy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="15dp"
+                android:text="Copy"
+                android:textSize="12sp"
+                android:background="@drawable/copy_border"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -144,13 +166,35 @@
             android:text="Changed Color"
             android:textSize="16sp"/>
 
-        <TextView
-            android:id="@+id/textViewNewHEX"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="HEX : "
-            android:textSize="16sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewNewHEX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HEX : "
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewNewColorCopy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="15dp"
+                android:text="Copy"
+                android:textSize="12sp"
+                android:background="@drawable/copy_border"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
