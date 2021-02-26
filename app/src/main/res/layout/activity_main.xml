@@ -29,10 +29,36 @@
         android:src="@drawable/ic_write_color"
         android:layout_gravity="bottom|end"
         android:background="@drawable/bg_round_button_white"
-        android:translationZ="10dp"
+        android:translationZ="5dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
         android:padding="15dp"
+        />
+
+    <ImageView
+        android:id="@+id/imageViewPhoto"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_camera_fffff3"
+        android:layout_gravity="bottom|end"
+        android:background="@drawable/bg_round_button_a593e0"
+        android:translationZ="5dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:padding="15dp"
+        />
+
+    <ImageView
+        android:id="@+id/imageViewAdd"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_plus_fffff3"
+        android:layout_gravity="bottom|end"
+        android:background="@drawable/bg_round_button_566270"
+        android:translationZ="10dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:padding="10dp"
         />
 
 </FrameLayout>

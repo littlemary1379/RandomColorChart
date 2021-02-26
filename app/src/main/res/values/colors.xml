@@ -9,8 +9,10 @@
     <color name="white">#FFFFFFFF</color>
 
     <!--ColorPick-->
-    <color name="black_4C4E56">#4C4E56</color>
-    <color name="black_707070">#707070</color>
+    <color name="color_4C4E56">#4C4E56</color>
+    <color name="color_707070">#707070</color>
+    <color name="color_A593E0">#A593E0</color>
+    <color name="color_566270">#566270</color>
 
 
 </resources>

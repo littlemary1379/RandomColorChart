@@ -1,6 +1,9 @@
 package com.mary.kotlinprojectstudy.main
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.animation.AnimationUtils
+import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -25,10 +28,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainColorAdapter: MainColorAdapter
 
     private lateinit var recyclerView: RecyclerView
-    lateinit var imageViewWrite: ImageView
-    lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var imageViewAdd: ImageView
+    private lateinit var imageViewWrite: ImageView
+    private lateinit var imageViewPhoto: ImageView
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private val db = Firebase.firestore
+    var add: Boolean = true
     var lastId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +72,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun findView() {
         recyclerView = findViewById(R.id.recyclerView)
+        imageViewAdd = findViewById(R.id.imageViewAdd)
         imageViewWrite = findViewById(R.id.imageViewWrite)
+        imageViewPhoto = findViewById(R.id.imageViewPhoto)
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
     }
 
@@ -79,8 +87,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         swipeRefreshLayout.setOnRefreshListener {
-            swipeRefreshLayout.isRefreshing=false
+            swipeRefreshLayout.isRefreshing = false
             loadColor()
+        }
+
+        imageViewAdd.setOnClickListener {
+            DlogUtil.d(TAG, "메뉴 클릭")
+            popupMenu()
+
         }
     }
 
@@ -135,6 +149,29 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun popupMenu() {
+        if (add) {
+            var animation = AnimationUtils.loadAnimation(this, R.anim.rotate_plus_to_close)
+            imageViewAdd.animation = animation
+            imageViewAdd.startAnimation(animation)
+            var writeAnimator = ObjectAnimator.ofFloat(imageViewPhoto, "translationY", 0f, 600f)
+            writeAnimator.duration = 400
+            writeAnimator.interpolator = OvershootInterpolator()
+            writeAnimator.target = imageViewPhoto
+            writeAnimator.start()
+
+
+
+            add = !add
+        } else {
+            var animation = AnimationUtils.loadAnimation(this, R.anim.rotate_close_to_plus)
+            imageViewAdd.animation = animation
+            imageViewAdd.startAnimation(animation)
+
+            add = !add
+        }
     }
 
     private fun loadId() {
