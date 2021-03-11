@@ -2,6 +2,7 @@ package com.mary.kotlinprojectstudy.main
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.animation.AnimationUtils
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
@@ -152,23 +153,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun popupMenu() {
+
+        var px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60f, this.resources.displayMetrics)
+
         if (add) {
+
             var animation = AnimationUtils.loadAnimation(this, R.anim.rotate_plus_to_close)
             imageViewAdd.animation = animation
             imageViewAdd.startAnimation(animation)
-            var writeAnimator = ObjectAnimator.ofFloat(imageViewPhoto, "translationY", 0f, 600f)
+            var writeAnimator = ObjectAnimator.ofFloat(imageViewWrite, "translationY", 0f, -px)
             writeAnimator.duration = 400
             writeAnimator.interpolator = OvershootInterpolator()
-            writeAnimator.target = imageViewPhoto
+            writeAnimator.target = imageViewWrite
             writeAnimator.start()
 
-
+            var photoAnimator = ObjectAnimator.ofFloat(imageViewPhoto, "translationY", 0f, -px*2)
+            photoAnimator.duration = 400
+            photoAnimator.interpolator = OvershootInterpolator()
+            photoAnimator.target = imageViewPhoto
+            photoAnimator.start()
 
             add = !add
         } else {
             var animation = AnimationUtils.loadAnimation(this, R.anim.rotate_close_to_plus)
             imageViewAdd.animation = animation
             imageViewAdd.startAnimation(animation)
+
+            var writeAnimator = ObjectAnimator.ofFloat(imageViewWrite, "translationY", -px, 0f)
+            writeAnimator.duration = 400
+            writeAnimator.interpolator = OvershootInterpolator()
+            writeAnimator.target = imageViewWrite
+            writeAnimator.start()
+
+            var photoAnimator = ObjectAnimator.ofFloat(imageViewPhoto, "translationY", -px*2, 0f)
+            photoAnimator.duration = 400
+            photoAnimator.interpolator = OvershootInterpolator()
+            photoAnimator.target = imageViewPhoto
+            photoAnimator.start()
 
             add = !add
         }
