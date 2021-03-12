@@ -1,11 +1,20 @@
 package com.mary.kotlinprojectstudy.camera
 
 import android.Manifest
+import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -15,7 +24,11 @@ import com.mary.kotlinprojectstudy.util.DlogUtil
 import com.mary.kotlinprojectstudy.util.PermissionUtil
 import java.io.File
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class CameraActivity : AppCompatActivity() {
 
@@ -24,11 +37,15 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private lateinit var previewView : PreviewView
+    private lateinit var imageViewPhoto : ImageView
+    private lateinit var frameLayoutShutter: FrameLayout
 
-    private lateinit var imageCapture: ImageCapture
+    private var imageCapture: ImageCapture? = null
 
-    private lateinit var outputDirectoryStreamException : File
+    private lateinit var outputDirectory : File
     private lateinit var cameraExecutor: ExecutorService
+
+    private lateinit var cameraAnimationListener : Animation.AnimationListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +53,11 @@ class CameraActivity : AppCompatActivity() {
 
         findView()
         permissionCheck()
+        setListener()
+        setCameraAnimationListener()
+
+        outputDirectory = getOutputDirectory()
+        cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
     private fun permissionCheck() {
@@ -67,6 +89,21 @@ class CameraActivity : AppCompatActivity() {
 
     private fun findView(){
         previewView = findViewById(R.id.previewView)
+        imageViewPhoto = findViewById(R.id.imageViewPhoto)
+        frameLayoutShutter = findViewById(R.id.frameLayoutShutter)
+    }
+
+    private fun setListener() {
+        imageViewPhoto.setOnClickListener {
+            savePhoto()
+        }
+    }
+
+    private fun getOutputDirectory(): File {
+        val mediaDir = externalMediaDirs.firstOrNull()?.let {
+            File(it, resources.getString(R.string.app_name)).apply { mkdirs() } }
+        return if (mediaDir != null && mediaDir.exists())
+            mediaDir else filesDir
     }
 
     private fun openCamera(){
@@ -83,16 +120,66 @@ class CameraActivity : AppCompatActivity() {
                     it.setSurfaceProvider(previewView.surfaceProvider)
                 }
 
+            imageCapture = ImageCapture.Builder().build()
+
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
+
                 cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview)
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+                DlogUtil.d(TAG, "바인딩 성공")
+
             } catch (e : Exception) {
                 DlogUtil.d(TAG, "바인딩 실패 $e")
             }
         }, ContextCompat.getMainExecutor(this))
 
+    }
+
+    private fun savePhoto(){
+        imageCapture = imageCapture?: return
+
+        val photoFile = File(outputDirectory, SimpleDateFormat("yy-mm-dd", Locale.US).format(System.currentTimeMillis())+".png")
+        val outputOption = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+        imageCapture?.takePicture(outputOption, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback{
+            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                val savedUri = Uri.fromFile(photoFile)
+
+                val animation = AnimationUtils.loadAnimation(this@CameraActivity, R.anim.camera_shutter)
+                animation.setAnimationListener(cameraAnimationListener)
+                frameLayoutShutter.animation = animation
+                frameLayoutShutter.visibility=View.VISIBLE
+                frameLayoutShutter.startAnimation(animation)
+
+
+                DlogUtil.d(TAG, "imageCapture")
+            }
+
+            override fun onError(exception: ImageCaptureException) {
+                exception.printStackTrace()
+                onBackPressed()
+            }
+
+        })
+
+    }
+
+    private fun setCameraAnimationListener() {
+        cameraAnimationListener = object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                frameLayoutShutter.visibility=View.GONE
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+
+        }
     }
 
 }
