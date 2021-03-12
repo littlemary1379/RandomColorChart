@@ -14,6 +14,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mary.kotlinprojectstudy.R
 import com.mary.kotlinprojectstudy.bean.MainColor
+import com.mary.kotlinprojectstudy.camera.CameraActivity
 import com.mary.kotlinprojectstudy.main.adapter.MainColorAdapter
 import com.mary.kotlinprojectstudy.showdetail.ColorDetailActivity
 import com.mary.kotlinprojectstudy.ui.SpanSize
@@ -85,6 +86,10 @@ class MainActivity : AppCompatActivity() {
             var bundle = Bundle()
             bundle.putInt("lastId", lastId)
             ActivityUtil.startActivityWithoutFinish(this, WritingColorActivity::class.java, bundle)
+        }
+
+        imageViewPhoto.setOnClickListener {
+            ActivityUtil.startActivityWithoutFinish(this, CameraActivity::class.java)
         }
 
         swipeRefreshLayout.setOnRefreshListener {
