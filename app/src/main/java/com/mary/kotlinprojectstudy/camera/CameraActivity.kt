@@ -36,16 +36,19 @@ class CameraActivity : AppCompatActivity() {
         private const val TAG = "CameraActivity"
     }
 
-    private lateinit var previewView : PreviewView
-    private lateinit var imageViewPhoto : ImageView
+    private lateinit var previewView: PreviewView
+    private lateinit var imageViewPhoto: ImageView
     private lateinit var frameLayoutShutter: FrameLayout
+    private lateinit var imageViewPreview: ImageView
 
     private var imageCapture: ImageCapture? = null
 
-    private lateinit var outputDirectory : File
+    private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
 
-    private lateinit var cameraAnimationListener : Animation.AnimationListener
+    private lateinit var cameraAnimationListener: Animation.AnimationListener
+
+    private var savedUri : Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +65,9 @@ class CameraActivity : AppCompatActivity() {
 
     private fun permissionCheck() {
 
-        var permissionList = listOf(Manifest.permission.CAMERA)
+        var permissionList = listOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
-        if(!PermissionUtil.checkPermission(this, permissionList)) {
+        if (!PermissionUtil.checkPermission(this, permissionList)) {
             PermissionUtil.requestPermission(this, permissionList)
         } else {
             openCamera()
@@ -78,7 +81,7 @@ class CameraActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED ) {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             DlogUtil.d(TAG, "승인")
             openCamera()
         } else {
@@ -87,10 +90,11 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    private fun findView(){
+    private fun findView() {
         previewView = findViewById(R.id.previewView)
         imageViewPhoto = findViewById(R.id.imageViewPhoto)
         frameLayoutShutter = findViewById(R.id.frameLayoutShutter)
+        imageViewPreview = findViewById(R.id.imageViewPreview)
     }
 
     private fun setListener() {
@@ -101,18 +105,19 @@ class CameraActivity : AppCompatActivity() {
 
     private fun getOutputDirectory(): File {
         val mediaDir = externalMediaDirs.firstOrNull()?.let {
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() } }
+            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
+        }
         return if (mediaDir != null && mediaDir.exists())
             mediaDir else filesDir
     }
 
-    private fun openCamera(){
+    private fun openCamera() {
         DlogUtil.d(TAG, "openCamera")
 
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
-            val cameraProvider : ProcessCameraProvider = cameraProviderFuture.get()
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
             val preview = Preview.Builder()
                 .build()
@@ -130,39 +135,47 @@ class CameraActivity : AppCompatActivity() {
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
                 DlogUtil.d(TAG, "바인딩 성공")
 
-            } catch (e : Exception) {
+            } catch (e: Exception) {
                 DlogUtil.d(TAG, "바인딩 실패 $e")
             }
         }, ContextCompat.getMainExecutor(this))
 
     }
 
-    private fun savePhoto(){
-        imageCapture = imageCapture?: return
+    private fun savePhoto() {
+        imageCapture = imageCapture ?: return
 
-        val photoFile = File(outputDirectory, SimpleDateFormat("yy-mm-dd", Locale.US).format(System.currentTimeMillis())+".png")
+        val photoFile = File(
+            outputDirectory,
+            SimpleDateFormat("yy-mm-dd", Locale.US).format(System.currentTimeMillis()) + ".png"
+        )
         val outputOption = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
-        imageCapture?.takePicture(outputOption, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback{
-            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                val savedUri = Uri.fromFile(photoFile)
+        imageCapture?.takePicture(
+            outputOption,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    savedUri = Uri.fromFile(photoFile)
+                    DlogUtil.d(TAG, "savedUri : $savedUri")
 
-                val animation = AnimationUtils.loadAnimation(this@CameraActivity, R.anim.camera_shutter)
-                animation.setAnimationListener(cameraAnimationListener)
-                frameLayoutShutter.animation = animation
-                frameLayoutShutter.visibility=View.VISIBLE
-                frameLayoutShutter.startAnimation(animation)
+                    val animation =
+                        AnimationUtils.loadAnimation(this@CameraActivity, R.anim.camera_shutter)
+                    animation.setAnimationListener(cameraAnimationListener)
+                    frameLayoutShutter.animation = animation
+                    frameLayoutShutter.visibility = View.VISIBLE
+                    frameLayoutShutter.startAnimation(animation)
 
 
-                DlogUtil.d(TAG, "imageCapture")
-            }
+                    DlogUtil.d(TAG, "imageCapture")
+                }
 
-            override fun onError(exception: ImageCaptureException) {
-                exception.printStackTrace()
-                onBackPressed()
-            }
+                override fun onError(exception: ImageCaptureException) {
+                    exception.printStackTrace()
+                    onBackPressed()
+                }
 
-        })
+            })
 
     }
 
@@ -172,12 +185,41 @@ class CameraActivity : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                frameLayoutShutter.visibility=View.GONE
+                frameLayoutShutter.visibility = View.GONE
+                showCaptureImage()
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
 
             }
+
+        }
+    }
+
+    private fun showCaptureImage() : Boolean{
+        if(imageViewPreview.visibility == View.GONE) {
+            imageViewPreview.visibility = View.VISIBLE
+            imageViewPreview.setImageURI(savedUri)
+            return false
+        }
+
+        return true
+
+    }
+
+    private fun hideCaptureImage(){
+        imageViewPreview.setImageURI(null)
+        imageViewPreview.visibility = View.GONE
+
+    }
+
+    override fun onBackPressed() {
+        if(showCaptureImage()) {
+            DlogUtil.d(TAG, "CaptureImage true")
+            hideCaptureImage()
+        } else {
+            onBackPressed()
+            DlogUtil.d(TAG, "CaptureImage false")
 
         }
     }
