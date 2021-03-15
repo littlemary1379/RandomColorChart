@@ -3,8 +3,9 @@
     package="com.mary.kotlinprojectstudy">
 
     <uses-feature android:name="android.hardware.camera.any" />
+
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KotlinProjectStudy">
-        <activity android:name=".camera.CameraActivity"></activity>
+        <activity android:name=".camera.photo.ColorAverageActivity"></activity>
+        <activity android:name=".camera.CameraActivity" />
         <activity android:name=".showdetail.ColorDetailActivity" />
         <activity android:name=".writing.WritingColorActivity" />
         <activity

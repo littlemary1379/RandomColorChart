@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.media.Image
 import android.net.Uri
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -21,6 +22,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.mary.kotlinprojectstudy.R
+import com.mary.kotlinprojectstudy.camera.photo.ColorAverageActivity
+import com.mary.kotlinprojectstudy.util.ActivityUtil
 import com.mary.kotlinprojectstudy.util.DlogUtil
 import com.mary.kotlinprojectstudy.util.PermissionUtil
 import java.io.File
@@ -43,6 +46,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var frameLayoutPreview: FrameLayout
     private lateinit var imageViewPreview: ImageView
     private lateinit var imageViewCancel: ImageView
+    private lateinit var imageViewAverage: ImageView
 
     private var imageCapture: ImageCapture? = null
 
@@ -101,6 +105,7 @@ class CameraActivity : AppCompatActivity() {
         imageViewPreview = findViewById(R.id.imageViewPreview)
         frameLayoutPreview = findViewById(R.id.frameLayoutPreview)
         imageViewCancel = findViewById(R.id.imageViewCancel)
+        imageViewAverage = findViewById(R.id.imageViewAverage)
     }
 
     private fun setListener() {
@@ -113,7 +118,16 @@ class CameraActivity : AppCompatActivity() {
                 hideCaptureImage()
             }
         }
+
+        imageViewAverage.setOnClickListener {
+            hideCaptureImage()
+            var bundle = Bundle()
+            bundle.putString("imageUri", savedUri.toString())
+            ActivityUtil.startActivityWithoutFinish(this, ColorAverageActivity::class.java, bundle)
+        }
+
     }
+
 
     private fun getOutputDirectory(): File {
         val mediaDir = externalMediaDirs.firstOrNull()?.let {

@@ -34,7 +34,8 @@
         android:id="@+id/frameLayoutPreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
         <ImageView
             android:id="@+id/imageViewPreview"
@@ -42,6 +43,17 @@
             android:layout_height="match_parent"
             android:background="@color/color_1E1E1E"
              />
+
+        <ImageView
+            android:id="@+id/imageViewAverage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_round_button_a593e0"
+            android:padding="10dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_average_fffff3" />
 
         <ImageView
             android:id="@+id/imageViewCancel"
