@@ -9,36 +9,50 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
     <ImageView
         android:id="@+id/imageViewPhoto"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_camera_fffff3"
+        android:layout_marginBottom="40dp"
         android:background="@drawable/bg_round_button_a593e0"
         android:padding="15dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_camera_fffff3"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="40dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
         android:id="@+id/frameLayoutShutter"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_1E1E1E"/>
+        android:background="@color/color_1E1E1E"
+        android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/imageViewPreview"
-        android:visibility="gone"
+    <FrameLayout
+        android:id="@+id/frameLayoutPreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_1E1E1E"/>
+        android:visibility="gone">
 
+        <ImageView
+            android:id="@+id/imageViewPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_1E1E1E"
+             />
 
+        <ImageView
+            android:id="@+id/imageViewCancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_cancel_fffff3"
+            android:layout_gravity="end"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"/>
+
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

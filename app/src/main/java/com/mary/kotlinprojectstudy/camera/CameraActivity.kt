@@ -4,6 +4,7 @@ import android.Manifest
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.pm.PackageManager
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -39,7 +40,9 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var previewView: PreviewView
     private lateinit var imageViewPhoto: ImageView
     private lateinit var frameLayoutShutter: FrameLayout
+    private lateinit var frameLayoutPreview: FrameLayout
     private lateinit var imageViewPreview: ImageView
+    private lateinit var imageViewCancel: ImageView
 
     private var imageCapture: ImageCapture? = null
 
@@ -48,7 +51,7 @@ class CameraActivity : AppCompatActivity() {
 
     private lateinit var cameraAnimationListener: Animation.AnimationListener
 
-    private var savedUri : Uri? = null
+    private var savedUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +68,8 @@ class CameraActivity : AppCompatActivity() {
 
     private fun permissionCheck() {
 
-        var permissionList = listOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
+        var permissionList =
+            listOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
         if (!PermissionUtil.checkPermission(this, permissionList)) {
             PermissionUtil.requestPermission(this, permissionList)
@@ -95,11 +99,19 @@ class CameraActivity : AppCompatActivity() {
         imageViewPhoto = findViewById(R.id.imageViewPhoto)
         frameLayoutShutter = findViewById(R.id.frameLayoutShutter)
         imageViewPreview = findViewById(R.id.imageViewPreview)
+        frameLayoutPreview = findViewById(R.id.frameLayoutPreview)
+        imageViewCancel = findViewById(R.id.imageViewCancel)
     }
 
     private fun setListener() {
         imageViewPhoto.setOnClickListener {
             savePhoto()
+        }
+
+        imageViewCancel.setOnClickListener {
+            if(frameLayoutPreview.visibility == View.VISIBLE) {
+                hideCaptureImage()
+            }
         }
     }
 
@@ -196,9 +208,9 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    private fun showCaptureImage() : Boolean{
-        if(imageViewPreview.visibility == View.GONE) {
-            imageViewPreview.visibility = View.VISIBLE
+    private fun showCaptureImage(): Boolean {
+        if (frameLayoutPreview.visibility == View.GONE) {
+            frameLayoutPreview.visibility = View.VISIBLE
             imageViewPreview.setImageURI(savedUri)
             return false
         }
@@ -207,14 +219,14 @@ class CameraActivity : AppCompatActivity() {
 
     }
 
-    private fun hideCaptureImage(){
+    private fun hideCaptureImage() {
         imageViewPreview.setImageURI(null)
-        imageViewPreview.visibility = View.GONE
+        frameLayoutPreview.visibility = View.GONE
 
     }
 
     override fun onBackPressed() {
-        if(showCaptureImage()) {
+        if (showCaptureImage()) {
             DlogUtil.d(TAG, "CaptureImage true")
             hideCaptureImage()
         } else {
